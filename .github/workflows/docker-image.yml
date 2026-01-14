@@ -1,0 +1,22 @@
+name: build image
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag systemair-mqtt:$(date +%s)
+    - name: Build and push docker image
+      uses: docker/build-push-action@v1
+      with:
+        username: _json_key
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: docker.pkg.github.com
+        repository: xoiram/systemair-mqtt
+        tags: latest
+        dockerfile: Dockerfile
