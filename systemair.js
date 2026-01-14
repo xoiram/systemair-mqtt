@@ -131,8 +131,10 @@ const readRegisters = (registers, stateTopic) => {
   log(`attempting to read ${registers.length} and publish results to ${stateTopic}`)
   const encodedRegisters = `{${registers.map((reg) => `"${reg.register}":1`).join(",")}}`
   http
-    .request({ host: deviceHost, path: `/mread?${encodedRegisters}` }, (response) => { 
-      handleResponse(response, registers, stateTopic) 
+    .request({ host: deviceHost, path: `/mread?${encodedRegisters}` }, (response) => {
+      const registersWithResponse = Object.keys(response)
+      log(`registers that received a response: ${registersWithResponse}`)
+      handleResponse(response, registers, stateTopic)
       publishEntityStatus(registers, 'online');
     }).on("error", (err) => {
       log(`received error reading registers: ${err}. exiting...`)
@@ -232,11 +234,11 @@ const updateDevice = (register, rawValue, registers) => {
     factor = relevantRegister.decimals * 10
   }
   const value = rawValue * factor
-  
+
   const encodedRequestParam = `{%22${register}%22:${value}}`
   log(`received request to update register ${register}`)
   http
-    .request({ host: deviceHost, path: `/mwrite?${encodedRequestParam}` }, (response) => {       
+    .request({ host: deviceHost, path: `/mwrite?${encodedRequestParam}` }, (response) => {
       log(`[register: ${register}] updated. new value: ${value}`)
      })
     .on("error", (err) => {
@@ -326,7 +328,7 @@ const handleResponse = function (response, registersToUse, topic) {
     const result = {}
 
     Object.keys(response).forEach((register) => {
-      const relevantReg = registersToUse.find((p) => p.register == register)
+      const relevantReg = registersToUse.find((p) => p.register === register)
       let value
       if (relevantReg.toHaValue !== undefined) {
         const rawValue = response[register]
@@ -334,11 +336,9 @@ const handleResponse = function (response, registersToUse, topic) {
       } else {
         value = readRegister(relevantReg, register, response);
       }
-      
-      if (lastValues[register] !== value) {
-        lastValues[register] = value
-        result[`result_${relevantReg.register}`] = value
-      }
+
+      lastValues[register] = value
+      result[`result_${relevantReg.register}`] = value
     });
 
     if (Object.keys(result).length > 0) {
