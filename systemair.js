@@ -68,8 +68,6 @@ const selectRegisters = [
   ]},
 ];
 
-const lastValues = []
-
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
@@ -326,7 +324,7 @@ const handleResponse = function (response, registersToUse, topic) {
     const result = {}
 
     Object.keys(response).forEach((register) => {
-      const relevantReg = registersToUse.find((p) => p.register === register)
+      const relevantReg = registersToUse.find((p) => p.register == register)
       let value
       if (relevantReg.toHaValue !== undefined) {
         const rawValue = response[register]
@@ -335,7 +333,6 @@ const handleResponse = function (response, registersToUse, topic) {
         value = readRegister(relevantReg, register, response);
       }
 
-      lastValues[register] = value
       result[`result_${relevantReg.register}`] = value
     });
 
