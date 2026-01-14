@@ -132,8 +132,6 @@ const readRegisters = (registers, stateTopic) => {
   const encodedRegisters = `{${registers.map((reg) => `"${reg.register}":1`).join(",")}}`
   http
     .request({ host: deviceHost, path: `/mread?${encodedRegisters}` }, (response) => {
-      const registersWithResponse = Object.keys(response)
-      log(`registers that received a response: ${registersWithResponse}`)
       handleResponse(response, registers, stateTopic)
       publishEntityStatus(registers, 'online');
     }).on("error", (err) => {
