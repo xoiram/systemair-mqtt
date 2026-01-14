@@ -130,8 +130,8 @@ const readRegisters = (registers, stateTopic) => {
   const encodedRegisters = `{${registers.map((reg) => `"${reg.register}":1`).join(",")}}`
   http
     .request({ host: deviceHost, path: `/mread?${encodedRegisters}` }, (response) => {
-      handleResponse(response, registers, stateTopic)
       publishEntityStatus(registers, 'online');
+      handleResponse(response, registers, stateTopic)
     }).on("error", (err) => {
       log(`received error reading registers: ${err}. exiting...`)
       publishEntityStatus(registers, 'offline')
