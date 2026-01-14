@@ -341,8 +341,10 @@ const handleResponse = function (response, registersToUse, topic) {
       }
     });
 
-    client.publish(topic, JSON.stringify(result))
-    log(`results: ${JSON.stringify(result)}`)
+    if (Object.keys(result).length > 0) {
+      client.publish(topic, JSON.stringify(result))
+      log(`results: ${JSON.stringify(result)}`)
+    }
   });
 };
 
