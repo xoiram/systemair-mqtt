@@ -68,6 +68,8 @@ const selectRegisters = [
   ]},
 ];
 
+const lastValues = {}
+
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
@@ -112,7 +114,7 @@ const registerToEntity = (register) => {
   const entity = {
     name: capitalizeFirstLetter(register.name),
     device_class: register.device_class,
-    state_topic: `${mqttStateTopic}/state/${register.register}`,
+    state_topic: `${mqttStateTopic}/${register.register}`,
     availability_topic: `${mqttAvailabilityTopic}/availability/${register.register}`,
     availability_template: `{{ value_json.status_${register.register}}}`,
     unique_id: `systemair-${deviceName}-${register.register}`,
@@ -157,7 +159,6 @@ const registerDevicesMqtt = (systemairRegisters, numberEntities, selectRegisters
     const entity = registerToEntity(register)
     log(`[${entityConfigTopic}] registering entity: ${entity.name}`)
     client.publish(entityConfigTopic, JSON.stringify(entity));
-    //client.publish(`${mqttSensorTopic}/config`, '');
   });
 
   numberEntities.forEach(register => {
@@ -165,7 +166,6 @@ const registerDevicesMqtt = (systemairRegisters, numberEntities, selectRegisters
     const numberEntity = configRegisterToNumberEntity(register)
     log(`[${entityNumberConfigTopic}] registering config entity: ${numberEntity.name}`)
     client.publish(entityNumberConfigTopic, JSON.stringify(numberEntity));
-    // client.publish(entityNumberConfigTopic, '');
   });
 
   selectRegisters.forEach(register => {
@@ -173,7 +173,6 @@ const registerDevicesMqtt = (systemairRegisters, numberEntities, selectRegisters
     const selectEntity = selectRegisterToEntity(register)
     log(`[${selectConfigTopic}] registering select entity: ${selectEntity.name}`)
     client.publish(selectConfigTopic, JSON.stringify(selectEntity));
-    // client.publish(entityNumberConfigTopic, '');
   });
 };
 
@@ -336,7 +335,10 @@ const handleResponse = function (response, registersToUse, topic) {
 
       const result = {}
       result[`result_${relevantReg.register}`] = value
-      client.publish(`${topic}/state/${relevantReg.register}`, JSON.stringify(result))
+      if (value !== lastValues[relevantReg.register]) {
+        lastValues[register] = value
+        client.publish(`${topic}/${relevantReg.register}`, JSON.stringify(result))
+      }
     });
   });
 };
