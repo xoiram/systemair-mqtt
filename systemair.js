@@ -112,8 +112,8 @@ const registerToEntity = (register) => {
   const entity = {
     name: capitalizeFirstLetter(register.name),
     device_class: register.device_class,
-    state_topic: mqttStateTopic,
-    availability_topic: mqttAvailabilityTopic,
+    state_topic: `${mqttStateTopic}/state/${register.register}`,
+    availability_topic: `${mqttAvailabilityTopic}/availability/${register.register}`,
     availability_template: `{{ value_json.status_${register.register}}}`,
     unique_id: `systemair-${deviceName}-${register.register}`,
     value_template: `{{ value_json.result_${register.register}}}`,
@@ -141,12 +141,14 @@ const readRegisters = (registers, stateTopic) => {
 }
 
 const publishEntityStatus = (registers, status) => {
-  const registerStatus = {}
   registers.forEach((register) => {
+    const registerStatus = {}
     registerStatus[`status_${register.register}`] = status
+
+    const availability = `${mqttAvailabilityTopic}/register/${register.register}`
+    log(`publishing availability for registers ${JSON.stringify(registerStatus)} status: ${status} to topic: ${availability}`)
+    client.publish(availability, JSON.stringify(registerStatus));
   });
-  log(`publishing availability for registers ${JSON.stringify(registerStatus)} status: ${status} to topic: ${mqttAvailabilityTopic}`)
-  client.publish(mqttAvailabilityTopic, JSON.stringify(registerStatus));
 }
 
 const registerDevicesMqtt = (systemairRegisters, numberEntities, selectRegisters) => {
@@ -321,10 +323,9 @@ const handleResponse = function (response, registersToUse, topic) {
 
   response.on("end", function () {
     const response = JSON.parse(str);
-    const result = {}
 
     Object.keys(response).forEach((register) => {
-      const relevantReg = registersToUse.find((p) => p.register == register)
+      const relevantReg = registersToUse.find((p) => `${p.register}` === register)
       let value
       if (relevantReg.toHaValue !== undefined) {
         const rawValue = response[register]
@@ -333,13 +334,10 @@ const handleResponse = function (response, registersToUse, topic) {
         value = readRegister(relevantReg, register, response);
       }
 
+      const result = {}
       result[`result_${relevantReg.register}`] = value
+      client.publish(`${topic}/state/${relevantReg.register}`, JSON.stringify(result))
     });
-
-    if (Object.keys(result).length > 0) {
-      client.publish(topic, JSON.stringify(result))
-      log(`results: ${JSON.stringify(result)}`)
-    }
   });
 };
 
