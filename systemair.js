@@ -143,6 +143,7 @@ const readRegisters = (registers, stateTopic) => {
 }
 
 const publishEntityStatus = (registers, status) => {
+  log(`marking ${registers.map(r => r.name).join()} as ${status}`)
   registers.forEach((register) => {
     const registerStatus = {}
     registerStatus[`status_${register.register}`] = status
