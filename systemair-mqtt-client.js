@@ -3,7 +3,7 @@ const mqtt = require('mqtt');
 const {registers, configRegisters, selectRegisters, getStateTopic, getConfigTopic, getCommandTopic,
     getAvailabilityTopic
 } = require("./systemair-registers");
-const { updateDevice } = require("./systemair-service")
+
 require('dotenv').config();
 
 const mqttUrl = process.env.MQTT_URL || 'mqtt://localhost:1883';
@@ -191,7 +191,7 @@ const setupMessageHandling = () => {
         const topicType = topicRegistersType[topic]
 
         if (topicType === "config") {
-            updateDevice(register, message.toString(), configRegisters)
+            // updateDevice(register, message.toString(), configRegisters)
         } else if (topicType === "command") {
             updateSelect(register, message.toString(), selectRegisters)
         } else {
