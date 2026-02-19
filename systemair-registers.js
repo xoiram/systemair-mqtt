@@ -54,15 +54,15 @@ const selectRegisters = [
 const getAvailabilityTopic = (deviceName, register) => {
     return sanitizeTopicName(`systemair/${deviceName}/${register.name}/availability`)
 }
-/** Used for autodiscovery */
 const getStateTopic = (deviceName, register) => {
-    return sanitizeTopicName(`homeassistant/${register.type}/${deviceName}/${register.name}/state`)
+    return sanitizeTopicName(`systemair/${deviceName}/${register.name}/state`)
 }
 const getCommandTopic = (deviceName, register) => {
     return sanitizeTopicName(`systemair/${deviceName}/${register.name}/set`)
 }
+/** Used for autodiscovery */
 const getConfigTopic = (deviceName, register) => {
-    return sanitizeTopicName(`systemair/${deviceName}/${register.name}/config`)
+    return sanitizeTopicName(`homeassistant/${register.type}/${deviceName}/${register.name}/config`)
 }
 const sanitizeTopicName = (topic) => {
     return topic.replace(/ /g,"_")
