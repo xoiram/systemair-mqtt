@@ -22,7 +22,7 @@ const readRegisters = (registers) => {
 }
 
 const updateDevice = (register, rawValue, registers) => {
-    const relevantRegister = registers.find((p) => p.register === register)
+    const relevantRegister = registers.find((p) => p.register === register.register)
 
     let factor = 1
     if (relevantRegister.decimals > 0) {
