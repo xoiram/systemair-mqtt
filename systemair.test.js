@@ -13,7 +13,7 @@ describe('Systemair MQTT Topic Generation', () => {
             test(`should generate correct state topics for ${reg.name}`, () => {
                 const entityValueTopic = getStateTopic("test", reg)
                 expect(entityValueTopic).toEqual(expect.not.stringContaining(" "));
-                expect(entityValueTopic).toBe(`homeassistant/${reg.type}/test/${expectedName}/state`)
+                expect(entityValueTopic).toBe(`systemair/test/${expectedName}/state`)
             })
             test(`should generate correct availability topics for ${reg.name}`, () => {
                 const availabilityTopic = getAvailabilityTopic("test", reg)
@@ -28,7 +28,7 @@ describe('Systemair MQTT Topic Generation', () => {
             test(`should generate correct topics for ${reg.name}`, () => {
                 const configTopic = getConfigTopic("test", reg)
                 expect(configTopic).toEqual(expect.not.stringContaining(" "));
-                expect(configTopic).toBe(`systemair/test/${expectedName}/config`)
+                expect(configTopic).toBe(`homeassistant/${reg.type}/test/${expectedName}/config`)
             });
         });
     });
