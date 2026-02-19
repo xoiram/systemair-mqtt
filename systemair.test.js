@@ -1,5 +1,5 @@
 const systemairRegisters = require('./systemair-registers');
-const {getConfigTopic, getCommandTopic} = require("./systemair-registers");
+const {getConfigTopic, getCommandTopic, sanitizeTopicName} = require("./systemair-registers");
 
 // Extract exported components
 const {
@@ -9,29 +9,36 @@ const {
 describe('Systemair MQTT Topic Generation', () => {
     describe('state topics', () => {
         registers.forEach(reg => {
+            const expectedName = sanitizeTopicName(reg.name)
             test(`should generate correct state topics for ${reg.name}`, () => {
                 const entityValueTopic = getStateTopic("test", reg)
-                expect(entityValueTopic).toBe(`homeassistant/systemair/test/${reg.register}/state`)
+                expect(entityValueTopic).toEqual(expect.not.stringContaining(" "));
+                expect(entityValueTopic).toBe(`homeassistant/${reg.type}/test/${expectedName}/state`)
             })
             test(`should generate correct availability topics for ${reg.name}`, () => {
                 const availabilityTopic = getAvailabilityTopic("test", reg)
-                expect(availabilityTopic).toBe(`homeassistant/systemair/test/${reg.register}/availability`)
+                expect(availabilityTopic).toEqual(expect.not.stringContaining(" "));
+                expect(availabilityTopic).toBe(`systemair/test/${expectedName}/availability`)
             });
         });
     });
     describe('config topic', () => {
         configRegisters.forEach(reg => {
+            const expectedName = sanitizeTopicName(reg.name)
             test(`should generate correct topics for ${reg.name}`, () => {
                 const configTopic = getConfigTopic("test", reg)
-                expect(configTopic).toBe(`homeassistant/systemair/test/${reg.register}/config`)
+                expect(configTopic).toEqual(expect.not.stringContaining(" "));
+                expect(configTopic).toBe(`systemair/test/${expectedName}/config`)
             });
         });
     });
     describe('command topic', () => {
         selectRegisters.forEach(reg => {
+            const expectedName = sanitizeTopicName(reg.name)
             test(`should generate correct topics for ${reg.name}`, () => {
                 const selectTopic = getCommandTopic("test", reg)
-                expect(selectTopic).toBe(`homeassistant/systemair/test/${reg.register}/set`)
+                expect(selectTopic).toEqual(expect.not.stringContaining(" "));
+                expect(selectTopic).toBe(`systemair/test/${expectedName}/set`)
             });
         });
     });

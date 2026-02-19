@@ -23,6 +23,7 @@ const topicRegisters = {}
 const topicRegistersType = {}
 
 const initialize = () => {
+    log("connecting to mqtt...")
     client.on('connect', function () {
         log('Connected to MQTT. Registering devices.')
         registerDevicesMqtt(registers, configRegisters, selectRegisters);
