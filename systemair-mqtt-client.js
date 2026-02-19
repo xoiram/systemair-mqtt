@@ -115,7 +115,7 @@ const publishUpdateIfChanged = (register, value) => {
     const topic = getStateTopic(deviceName, register)
     if (value !== lastValues[register.register]) {
         log(`publishing updated value for register ${register.name}. new value is: ${value}`)
-        lastValues[register] = value
+        lastValues[register.register] = value
         client.publish(topic, JSON.stringify(result))
     }
 }
