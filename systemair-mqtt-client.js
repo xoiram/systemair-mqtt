@@ -171,7 +171,7 @@ const setupSelectSubscriptions = (selectRegisters) => {
 
 const setupConfigSubscriptions = (configRegisters) => {
     configRegisters.forEach((register) => {
-        const configTopic = getConfigTopic(deviceName, register)
+        const configTopic = getCommandTopic(deviceName, register)
         client.subscribe(configTopic, (err) => {
             if (err) {
                 log(`unable to subscribe to topic for register ${register.register}`)

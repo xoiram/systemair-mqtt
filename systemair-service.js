@@ -31,7 +31,7 @@ const updateDevice = (register, rawValue, registers) => {
     const value = rawValue * factor
 
     const encodedRequestParam = `{%22${register.register}%22:${value}}`
-    log(`received request to update register ${register.register}`)
+    log(`received request to update register ${register.register} with new value: ${value}`)
     http.request({host: deviceHost, path: `/mwrite?${encodedRequestParam}`}, (response) => {
         log(`[register: ${register.register}] updated. new value: ${value}`)
         publishUpdateIfChanged(register, value)
