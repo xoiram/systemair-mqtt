@@ -202,10 +202,15 @@ const setupMessageHandling = () => {
 };
 
 const updateSelect = (register, valueName, selectRegisters) => {
-    const relevantRegister = selectRegisters.find((p) => p.updateRegister === register)
-    const optionChosen = relevantRegister.options.find((o) => o.name === valueName)
-    const value = optionChosen.value
-    updateDevice(register, value, selectRegisters)
+    const relevantRegister = selectRegisters.find((p) => p.updateRegister === register.register)
+
+    if (relevantRegister !== undefined && relevantRegister !== null) {
+        const optionChosen = relevantRegister.options.find((o) => o.name === valueName)
+        const value = optionChosen.value
+        // updateDevice(register, value, selectRegisters)
+    } else {
+        log(`unable to find relevant register to update. known registers: ${JSON.stringify(selectRegisters)} requested register: ${JSON.stringify(register)}`)
+    }
 }
 
 const capitalizeFirstLetter = (string) => {
