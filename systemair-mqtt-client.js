@@ -113,8 +113,8 @@ const publishUpdateIfChanged = (register, value) => {
     const result = {}
     result[`result_${register.register}`] = value
     const topic = getStateTopic(deviceName, register)
-
     if (value !== lastValues[register.register]) {
+        log(`publishing updated value for register ${register.name}. new value is: ${value}`)
         lastValues[register] = value
         client.publish(topic, JSON.stringify(result))
     }
@@ -125,7 +125,7 @@ const publishEntityStatus = (registers, status) => {
     registers.forEach((register) => {
         const registerStatus = {}
         registerStatus[`status_${register.register}`] = status
-        const availabilityTopic = getStateTopic(deviceName, register)
+        const availabilityTopic = getAvailabilityTopic(deviceName, register)
         log(`publishing availability for registers ${JSON.stringify(registerStatus)} status: ${status} to topic: ${availabilityTopic}`)
         client.publish(availabilityTopic, JSON.stringify(registerStatus));
     });
