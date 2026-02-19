@@ -34,7 +34,7 @@ const mapNonAdjustedValueToName = (options, value) => {
 }
 
 const selectRegisters = [
-    { register: 1160, updateRegister: 1161, name: "usermode", type: "select", toHaValue: mapValueToName, options: [
+    { register: 1160, updateRegister: 1160, name: "usermode", type: "select", toHaValue: mapValueToName, options: [
             { value: 1, name: "auto" },
             { value: 2, name: "manual" },
             { value: 3, name: "crowded" },
