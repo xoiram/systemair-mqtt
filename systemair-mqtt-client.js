@@ -22,7 +22,7 @@ const lastValues = {}
 const topicRegisters = {}
 const topicRegistersType = {}
 
-const initialize = () => {
+const initialize = (updateDevice) => {
     log("connecting to mqtt...")
     client.on('connect', function () {
         log('Connected to MQTT. Registering devices.')
@@ -34,7 +34,7 @@ const initialize = () => {
 
         setupConfigSubscriptions(configRegisters);
         setupSelectSubscriptions(selectRegisters);
-        setupMessageHandling();
+        setupMessageHandling(updateDevice);
 
         subscribeToHomeAssistantUpdates()
     })
@@ -184,7 +184,7 @@ const setupConfigSubscriptions = (configRegisters) => {
     });
 };
 
-const setupMessageHandling = () => {
+const setupMessageHandling = (updateDevice) => {
     client.on('message', (topic, message) => {
         log(`received message on topic ${topic}. message: ${message}`);
 
@@ -192,22 +192,22 @@ const setupMessageHandling = () => {
         const topicType = topicRegistersType[topic]
 
         if (topicType === "config") {
-            // updateDevice(register, message.toString(), configRegisters)
+            updateDevice(register, message.toString(), configRegisters)
         } else if (topicType === "command") {
-            updateSelect(register, message.toString(), selectRegisters)
+            updateSelect(register, message.toString(), selectRegisters, updateDevice)
         } else {
             log(`received message on unknown topic: ${topic}`)
         }
     });
 };
 
-const updateSelect = (register, valueName, selectRegisters) => {
+const updateSelect = (register, valueName, selectRegisters, updateDevice) => {
     const relevantRegister = selectRegisters.find((p) => p.updateRegister === register.register)
 
     if (relevantRegister !== undefined && relevantRegister !== null) {
         const optionChosen = relevantRegister.options.find((o) => o.name === valueName)
         const value = optionChosen.value
-        // updateDevice(register, value, selectRegisters)
+        updateDevice(register, value, selectRegisters)
     } else {
         log(`unable to find relevant register to update. known registers: ${JSON.stringify(selectRegisters)} requested register: ${JSON.stringify(register)}`)
     }
