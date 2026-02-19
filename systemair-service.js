@@ -34,6 +34,7 @@ const updateDevice = (register, rawValue, registers) => {
     log(`received request to update register ${register.register}`)
     http.request({host: deviceHost, path: `/mwrite?${encodedRequestParam}`}, (response) => {
         log(`[register: ${register.register}] updated. new value: ${value}`)
+        publishUpdateIfChanged(register, value)
     })
         .on("error", (err) => {
             publishEntityStatus([relevantRegister], 'offline');
