@@ -192,25 +192,19 @@ const setupMessageHandling = (updateDevice) => {
         const topicType = topicRegistersType[topic]
 
         if (topicType === "config") {
-            updateDevice(register, message.toString(), configRegisters)
+            updateDevice(register, message.toString())
         } else if (topicType === "command") {
-            updateSelect(register, message.toString(), selectRegisters, updateDevice)
+            updateSelect(register, message.toString(), updateDevice)
         } else {
             log(`received message on unknown topic: ${topic}`)
         }
     });
 };
 
-const updateSelect = (register, valueName, selectRegisters, updateDevice) => {
-    const relevantRegister = selectRegisters.find((p) => p.updateRegister === register.register)
-
-    if (relevantRegister !== undefined && relevantRegister !== null) {
-        const optionChosen = relevantRegister.options.find((o) => o.name === valueName)
-        const value = optionChosen.value
-        updateDevice(register, value, selectRegisters)
-    } else {
-        log(`unable to find relevant register to update. known registers: ${JSON.stringify(selectRegisters)} requested register: ${JSON.stringify(register)}`)
-    }
+const updateSelect = (register, valueName, updateDevice) => {
+    const optionChosen = register.options.find((o) => o.name === valueName)
+    const value = optionChosen.value
+    updateDevice(register, value)
 }
 
 const capitalizeFirstLetter = (string) => {

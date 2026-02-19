@@ -21,12 +21,10 @@ const readRegisters = (registers) => {
 
 }
 
-const updateDevice = (register, rawValue, registers) => {
-    const relevantRegister = registers.find((p) => p.register === register.register)
-
+const updateDevice = (register, rawValue) => {
     let factor = 1
-    if (relevantRegister.decimals > 0) {
-        factor = relevantRegister.decimals * 10
+    if (register.decimals > 0) {
+        factor = register.decimals * 10
     }
     const value = rawValue * factor
 
@@ -37,7 +35,7 @@ const updateDevice = (register, rawValue, registers) => {
         publishUpdateIfChanged(register, value)
     })
         .on("error", (err) => {
-            publishEntityStatus([relevantRegister], 'offline');
+            publishEntityStatus([register], 'offline');
             log(`received error: ${err}`)
         })
         .end();
