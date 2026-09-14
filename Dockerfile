@@ -7,11 +7,15 @@ WORKDIR /usr/src/app
 # Set NODE_ENV to production
 ENV NODE_ENV=production
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install and enable Corepack (no longer bundled with Node) so the pnpm
+# version pinned in package.json is used
+RUN npm install -g corepack@latest && corepack enable
+
+# Copy package.json, pnpm-lock.yaml, pnpm-workspace.yaml and .npmrc
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 
 # Install only production dependencies
-RUN npm ci --omit=dev
+RUN pnpm install --prod --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .

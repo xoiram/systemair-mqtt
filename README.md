@@ -12,7 +12,7 @@ This software is very much "use at your own risk" and is to be considered pre-al
 The IAM module has issues doing quick successive queries and updates, which can cause problems if you're accessing the web ui of the IAM module at the same time as this application is running.
 
 # Prerequisits
-Node 18 with npm. Might work on other versions, but who knows.
+Node 18 with pnpm. Might work on other versions, but who knows.
 
 To run it I would recommend using a public known
 
@@ -23,7 +23,7 @@ Check out the project, copy and rename the `systemair-config-example.js` file to
 
 Then you can run it with:
 
-`npm install && node systemair.js`
+`pnpm install && node systemair.js`
 
 There is almost no error handling, so I'm currently running it with:
 

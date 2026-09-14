@@ -1,0 +1,16 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "minimumReleaseAge": "7 days",
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  },
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "github-actions": {
+    "pinDigests": true
+  }
+}
