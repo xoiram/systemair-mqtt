@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const {log} = require("./utils")
 const {publishEntityStatus, publishUpdateIfChanged} = require("./systemair-mqtt-client")

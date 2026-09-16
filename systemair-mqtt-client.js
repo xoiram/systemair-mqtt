@@ -4,7 +4,7 @@ const {registers, configRegisters, selectRegisters, getStateTopic, getConfigTopi
     getAvailabilityTopic
 } = require("./systemair-registers");
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const mqttUrl = process.env.MQTT_URL || 'mqtt://localhost:1883';
 const mqttUsername = process.env.MQTT_USERNAME;
@@ -21,6 +21,11 @@ const client = mqtt.connect(mqttUrl, mqttOptions)
 const lastValues = {}
 const topicRegisters = {}
 const topicRegistersType = {}
+
+client.on('error', function (err) {
+    log(`MQTT client error: ${err.message}. exiting...`)
+    process.exit(1)
+})
 
 const initialize = (updateDevice) => {
     log("connecting to mqtt...")
