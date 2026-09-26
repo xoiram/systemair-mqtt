@@ -16,19 +16,35 @@ const mqttOptions = {
     username: mqttUsername,
     password: mqttPassword,
     clientId: mqttClientId,
+    reconnectPeriod: 5000,
 }
 const client = mqtt.connect(mqttUrl, mqttOptions)
 const lastValues = {}
 const topicRegisters = {}
 const topicRegistersType = {}
 
+// CONNACK codes for bad credentials / not authorized (MQTT 3.1.1 and 5).
+// Retrying won't fix these, so exit instead of reconnecting forever.
+const fatalConnackCodes = [4, 5, 134, 135]
+
 client.on('error', function (err) {
-    log(`MQTT client error: ${err.message}. exiting...`)
-    process.exit(1)
+    if (fatalConnackCodes.includes(err.code)) {
+        log(`MQTT connection refused: ${err.message}. exiting...`)
+        process.exit(1)
+    }
+    log(`MQTT client error: ${err.message}. will retry in ${mqttOptions.reconnectPeriod / 1000}s`)
+})
+
+client.on('offline', function () {
+    log('MQTT connection lost. reconnecting...')
 })
 
 const initialize = (updateDevice) => {
     log("connecting to mqtt...")
+    // Registered once here, not in 'connect', so reconnects don't stack duplicate handlers
+    setupMessageHandling(updateDevice);
+
+    // Fires on the initial connect and on every reconnect; re-announce entities each time
     client.on('connect', function () {
         log('Connected to MQTT. Registering devices.')
         registerDevicesMqtt(registers, configRegisters, selectRegisters);
@@ -39,7 +55,6 @@ const initialize = (updateDevice) => {
 
         setupConfigSubscriptions(configRegisters);
         setupSelectSubscriptions(selectRegisters);
-        setupMessageHandling(updateDevice);
 
         subscribeToHomeAssistantUpdates()
     })
@@ -53,15 +68,6 @@ const subscribeToHomeAssistantUpdates = () => {
             log("subscribed to HA status updates")
         }
     })
-
-    client.on('message', (topic, message) => {
-        log(`received message on topic ${topic}. message: ${message}`);
-        if (topic === "homeassistant/status") {
-            if (message.toString() === 'online') {
-                registerDevicesMqtt(registers, configRegisters, selectRegisters);
-            }
-        }
-    });
 }
 
 const selectRegisterToEntity = (register) => {
@@ -192,6 +198,13 @@ const setupConfigSubscriptions = (configRegisters) => {
 const setupMessageHandling = (updateDevice) => {
     client.on('message', (topic, message) => {
         log(`received message on topic ${topic}. message: ${message}`);
+
+        if (topic === "homeassistant/status") {
+            if (message.toString() === 'online') {
+                registerDevicesMqtt(registers, configRegisters, selectRegisters);
+            }
+            return
+        }
 
         const register = topicRegisters[topic]
         const topicType = topicRegistersType[topic]
