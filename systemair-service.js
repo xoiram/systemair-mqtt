@@ -79,7 +79,16 @@ const handleResponse = function (response, registersToUse) {
     });
 
     response.on("end", function () {
-        const response = JSON.parse(str);
+        let response;
+        try {
+            response = JSON.parse(str);
+        } catch (err) {
+            // The unit answers e.g. "MB DISCONNECTED" when it can't reach its
+            // Modbus side. Not an app error: skip this round, try the next.
+            log(`unparsable response (${err.message}): ${str.slice(0, 100)}`)
+            publishEntityStatus(registersToUse, 'offline')
+            return
+        }
 
         Object.keys(response).forEach((register) => {
             const relevantReg = registersToUse.find((p) => `${p.register}` === register)
