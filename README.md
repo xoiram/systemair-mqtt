@@ -25,7 +25,14 @@ Then you can run it with:
 
 `pnpm install && node systemair.js`
 
-There is almost no error handling, so I'm currently running it with:
+## Error handling
+If the connection to the MQTT broker drops or the broker is unreachable, the app logs the error and retries every 5 seconds. Once reconnected, it registers the entities with home assistant again.
+
+The app exits (with code 1) when:
+- the broker rejects the MQTT username/password, since retrying won't help
+- reading registers from the IAM module fails
+
+So it should still be run under something that restarts it, e.g. a Docker restart policy (`--restart unless-stopped`) or a loop:
 
 `while true; node systemair.js; sleep 10; end`
 
