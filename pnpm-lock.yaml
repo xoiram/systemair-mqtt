@@ -167,8 +167,8 @@ importers:
   .:
     dependencies:
       '@formatjs/intl-relativetimeformat':
-        specifier: ^9.4.1
-        version: 9.5.2
+        specifier: ^12.0.0
+        version: 12.3.16
       cheerio:
         specifier: ^1.0.0-rc.10
         version: 1.2.0
@@ -372,14 +372,14 @@ packages:
   '@emnapi/wasi-threads@1.2.1':
     resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
 
-  '@formatjs/ecma402-abstract@1.11.3':
-    resolution: {integrity: sha512-kP/Buv5vVFMAYLHNvvUzr0lwRTU0u2WTy44Tqwku1X3C3lJ5dKqDCYVqA8wL+Y19Bq+MwHgxqd5FZJRCIsLRyQ==}
+  '@formatjs/fast-memoize@3.1.7':
+    resolution: {integrity: sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==}
 
-  '@formatjs/intl-localematcher@0.2.24':
-    resolution: {integrity: sha512-K/HRGo6EMnCbhpth/y3u4rW4aXkmQNqRe1L2G+Y5jNr3v0gYhvaucV8WixNju/INAMbPBlbsRBRo/nfjnoOnxQ==}
+  '@formatjs/intl-localematcher@0.9.0':
+    resolution: {integrity: sha512-Z7TD3ssNry1Av1dVDoq/mzpxGyxqWwU0ClWEo+BB3k0JQTeQvUGmeK9WZGYvlqStS0UqkaKXk3dfjsb6NaHAxw==}
 
-  '@formatjs/intl-relativetimeformat@9.5.2':
-    resolution: {integrity: sha512-+/MNqvwjRpKX5eGnkZdvTuI3kDJCmE/O8ge47NsYbwL0mFVkBxUwgNrwEqU/j27wuRzMEl0al+Kt4tQk3/ovaQ==}
+  '@formatjs/intl-relativetimeformat@12.3.16':
+    resolution: {integrity: sha512-wIFsJiH/p9yMLzY3jyvht2vcjgJopMn30ePQQh7upkB5YYSAX3whtiqytG1EPhy2QKDy1PKOk+BJVNLA6HLePg==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -2221,20 +2221,15 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@formatjs/ecma402-abstract@1.11.3':
-    dependencies:
-      '@formatjs/intl-localematcher': 0.2.24
-      tslib: 2.8.1
+  '@formatjs/fast-memoize@3.1.7': {}
 
-  '@formatjs/intl-localematcher@0.2.24':
+  '@formatjs/intl-localematcher@0.9.0':
     dependencies:
-      tslib: 2.8.1
+      '@formatjs/fast-memoize': 3.1.7
 
-  '@formatjs/intl-relativetimeformat@9.5.2':
+  '@formatjs/intl-relativetimeformat@12.3.16':
     dependencies:
-      '@formatjs/ecma402-abstract': 1.11.3
-      '@formatjs/intl-localematcher': 0.2.24
-      tslib: 2.8.1
+      '@formatjs/intl-localematcher': 0.9.0
 
   '@isaacs/cliui@8.0.2':
     dependencies:
