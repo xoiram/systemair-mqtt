@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:latest
+FROM node:22-alpine
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -24,7 +24,7 @@ COPY . .
 EXPOSE 3000
 
 # Use dumb-init as the entry point to handle signals properly
-RUN apt-get update && apt-get install -y dumb-init
+RUN apk add --no-cache dumb-init
 
 # Start the application
 CMD ["dumb-init", "node", "systemair.js"]
