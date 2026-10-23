@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "timezone": "Europe/Oslo",
   "minimumReleaseAge": "7 days",
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null
@@ -17,8 +18,11 @@
   "platformAutomerge": false,
   "packageRules": [
     {
-      "description": "Minor and patch updates automerge once CI passes",
+      "description": "Minor and patch updates: one grouped PR a day, automerged once CI passes",
       "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all minor and patch dependencies",
+      "groupSlug": "all-minor-patch",
+      "schedule": ["before 6am"],
       "automerge": true
     }
   ]
