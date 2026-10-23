@@ -2,4 +2,4 @@
 # Dockerfile's node:22-alpine. pnpm comes from package.json's packageManager
 # through corepack (`corepack enable` once per Node install).
 [tools]
-node = "22"
+node = "24"
