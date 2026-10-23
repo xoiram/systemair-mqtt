@@ -12,5 +12,14 @@
   },
   "github-actions": {
     "pinDigests": true
-  }
+  },
+  "automergeType": "pr",
+  "platformAutomerge": false,
+  "packageRules": [
+    {
+      "description": "Minor and patch updates automerge once CI passes",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
 }
