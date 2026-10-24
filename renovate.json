@@ -24,6 +24,13 @@
       "groupSlug": "all-minor-patch",
       "schedule": ["before 6am"],
       "automerge": true
+    },
+    {
+      "description": "Node.js majors: mise.toml (development) and the Dockerfile's base image in one PR, so they stay on the same major",
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "Node.js",
+      "groupSlug": "nodejs-major"
     }
   ]
 }
