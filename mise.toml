@@ -1,5 +1,5 @@
 # Node for development (the dev pod, the laptop): the same major as the
-# Dockerfile's node:22-alpine. pnpm comes from package.json's packageManager
+# Dockerfile's node:24-alpine. pnpm comes from package.json's packageManager
 # through corepack (`corepack enable` once per Node install).
 [tools]
 node = "24"
