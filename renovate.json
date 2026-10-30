@@ -4,6 +4,7 @@
     "config:recommended"
   ],
   "timezone": "Europe/Oslo",
+  "semanticCommits": "enabled",
   "minimumReleaseAge": "7 days",
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null
