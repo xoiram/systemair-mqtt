@@ -10,7 +10,8 @@
     "minimumReleaseAge": null
   },
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "minimumReleaseAge": null
   },
   "github-actions": {
     "pinDigests": true
